@@ -1,0 +1,26 @@
+{
+  "plugins": [
+    "syntax-dynamic-import",
+    "transform-class-properties",
+    "transform-decorators-legacy",
+    "transform-object-rest-spread"
+  ],
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": ["last 2 versions", "safari 7"],
+        "chrome": 52,
+        "node": "current"
+      },
+      "loose": true
+    }],
+    "react"
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        "react-hot-loader/babel"
+      ]
+    }
+  }
+}
