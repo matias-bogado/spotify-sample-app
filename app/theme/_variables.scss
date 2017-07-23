@@ -1,0 +1,19 @@
+// fonts
+$font-family-default: 'Roboto', sans-serif;
+
+$font-title-large: 400 30px/1 $font-family-default;
+$font-title-medium: 500 20px/1 $font-family-default;
+$font-title-small: 500 16px/1 $font-family-default;
+
+// colors
+$colors: (
+  black: #000,
+  favorite: #db3b70,
+  gray-blue: #73879c,
+  gray: #545454,
+  light-gray: #f5f5f5,
+  primary: #312655,
+  secondary: #3a405b,
+  red: #d9534f,
+  white: #fff
+);
