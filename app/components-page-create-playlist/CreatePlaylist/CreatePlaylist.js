@@ -5,9 +5,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Typography from 'material-ui/Typography';
 
-import Layout from '../../components-core/Layout';
+import Layout from '../../components-core/Layout/Layout';
 import CreatePlaylistForm from '../CreatePlaylistForm/CreatePlaylistForm';
 import { createPlaylistRequest, createPlaylistClear } from '../../redux/actions/createPlaylistActions';
+import { playlistAddSong } from '../../redux/actions/playlistActions';
+
 
 import './CreatePlaylist.scss';
 
@@ -17,21 +19,25 @@ class CreatePlaylist extends React.PureComponent {
   }
 
   render() {
-    const { createPlaylistRequest, createPlaylistRequestState } = this.props;
-
     return (
       <div className="page-create-playlist">
         <Layout>
           <Typography type="headline" component="h3">
             Create a playlist
           </Typography>
-          <CreatePlaylistForm
-            onCreatePlaylist={createPlaylistRequest}
-            createPlaylistRequestState={createPlaylistRequestState}
-          />
+          <CreatePlaylistForm {...this.getFormProps()} />
         </Layout>
       </div>
     );
+  }
+
+  getFormProps() {
+    const { createPlaylistRequest, createPlaylistRequestState } = this.props;
+
+    return {
+      onCreatePlaylist: createPlaylistRequest,
+      createPlaylistRequestState
+    }
   }
 
 }
@@ -49,6 +55,9 @@ const mapDispatchToProps = dispatch => {
     },
     createPlaylistRequest: payload => {
       dispatch(createPlaylistRequest(payload));
+    },
+    addSong: song => {
+      dispatch(playlistAddSong(song));
     }
   }
 };

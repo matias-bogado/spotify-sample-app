@@ -6,8 +6,11 @@ import InputLabel from 'material-ui/Input/InputLabel';
 import FormControl from 'material-ui/Form/FormControl';
 import FormHelperText from 'material-ui/Form/FormHelperText';
 
+import SearchBox from '../SearchBox/SearchBox';
+
 class CreatePlaylistForm extends Component {
   static propTypes = {
+    onAddSong: PropTypes.func.isRequired,
     onCreatePlaylist: PropTypes.func.isRequired,
     createPlaylistRequestState: PropTypes.object.isRequired // Immutable
   };
@@ -58,7 +61,7 @@ class CreatePlaylistForm extends Component {
   }
 
   renderSearchBox() {
-    return 'b';
+    return <SearchBox {...this.getSearchBoxProps()} />;
   }
 
   getStepperProps() {
@@ -80,6 +83,12 @@ class CreatePlaylistForm extends Component {
     return {
       id: 'name',
       onChange: this.handleNameInputChange
+    };
+  }
+
+  getSearchBoxProps() {
+    return {
+      onSongSelected: this.props.onAddSong
     };
   }
 

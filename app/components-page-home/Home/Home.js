@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Typography from 'material-ui/Typography';
 
-import Layout from '../../components-core/Layout';
+import Layout from '../../components-core/Layout/Layout';
 import { removePlaylistRequest } from '../../redux/actions/removePlaylistActions';
 
 import './Home.scss';

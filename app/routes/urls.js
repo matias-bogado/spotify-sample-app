@@ -1,5 +1,7 @@
 export default {
+  authCallback: '/auth-callback',
   createPlaylist: '/playlist/create',
-  viewPlaylist: '/playlist/:playlistId',
-  home: '/'
+  login: '/login',
+  home: '/',
+  viewPlaylist: '/playlist/:playlistId'
 };

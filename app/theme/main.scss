@@ -35,3 +35,7 @@ table {
     color: map-get($colors, secondary)
   }
 }
+
+.error {
+  color: map-get($colors, red)
+}
