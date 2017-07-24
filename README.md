@@ -18,6 +18,10 @@ authentication flow.
 - ``sass``
 - ``Express.js``
 
+#### How can I run the app?
+- ``npm start`` will run both backend/frontend servers
+- Once the build process is completed. You can access the app on http://localhost:3000
+
 #### Pending items:
 - Most of the styling is pending
 - Spotify playlist save/delete API calls. Currently the playlists are not saved into the spotify account. Instead **they are saved into browser's local storage**
