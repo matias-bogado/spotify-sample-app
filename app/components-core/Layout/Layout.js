@@ -16,7 +16,7 @@ const Layout = ({ children }) => {
         <AppBar position="static">
           <Toolbar>
             <Typography type="title" color="inherit">
-              Spotify sample App - Manage playlist
+              Spotify sample App
             </Typography>
             <Button color="contrast"><Link to={urls.home}>Manage my playlists</Link></Button>
             <Button color="contrast"><Link to={urls.createPlaylist}>Create playlist</Link></Button>
@@ -35,6 +35,6 @@ const Layout = ({ children }) => {
 
 Layout.propTypes = {
   children: PropTypes.node
-}
+};
 
 export default Layout

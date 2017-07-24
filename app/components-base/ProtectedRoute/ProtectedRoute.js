@@ -20,20 +20,16 @@ class ProtectedRoute extends React.PureComponent {
   getRouteRenderComponent(props) {
     const { component: Component } = this.props;
 
-    return this.props.userId ?
+    return this.props.loginStatus.getIn(['data', 'access_token']) ?
       <Component {...props} /> :
       <Redirect to={{pathname: urls.login, state: { from: props.location }}}/>;
   }
 }
 
-function mapStateToProps(storeState) {
+function mapStateToProps(state) {
   return {
-    userId: storeState.authenticationStatus.getIn(['data', 'uid'])
+    loginStatus: state.login
   };
 }
 
-const connectOptions = {
-
-};
-
-export default connect(mapStateToProps, null, null, connectOptions)(ProtectedRoute);
+export default connect(mapStateToProps, null)(ProtectedRoute);
