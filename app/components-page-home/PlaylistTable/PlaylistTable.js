@@ -61,7 +61,7 @@ class PlaylistTable extends Component {
                     {playlist.get('name')}
                   </TableCell>
                   <TableCell numeric>
-                    {playlist.get('songs', 0)}
+                    {playlist.get('songs', new Map()).size || 0}
                   </TableCell>
                   <TableCell numeric>
                     <Button onClick={() => this.handleRemovePlaylist(playlistId)} color="primary">
@@ -133,7 +133,7 @@ class PlaylistTable extends Component {
   }
 
   handleRequestSort() {
-
+    // TODO: sort logic
   }
 
   handleSelectAllClick = () => {

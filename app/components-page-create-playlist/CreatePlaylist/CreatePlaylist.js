@@ -8,7 +8,7 @@ import Typography from 'material-ui/Typography';
 import Layout from '../../components-core/Layout/Layout';
 import CreatePlaylistForm from '../CreatePlaylistForm/CreatePlaylistForm';
 import { createPlaylistRequest, createPlaylistClear } from '../../redux/actions/createPlaylistActions';
-import { playlistAddSong } from '../../redux/actions/playlistActions';
+import { playlistAddSong, playlistRemoveSong } from '../../redux/actions/playlistActions';
 import { searchSongsRequest, searchSongsClear } from '../../redux/actions/songActions';
 
 
@@ -19,8 +19,10 @@ class CreatePlaylist extends React.PureComponent {
     addSong: PropTypes.func.isRequired,
     createPlaylistClear: PropTypes.func.isRequired,
     createPlaylistRequest: PropTypes.func.isRequired,
-    createPlaylistRequestState: PropTypes.object.isRequired,
+    createPlaylistRequestState: PropTypes.object.isRequired, // Immutable
     searchSongsTracks: PropTypes.arrayOf(PropTypes.object).isRequired,
+    playlists: PropTypes.object.isRequired, // Immutable
+    removeSong: PropTypes.func.isRequired,
     searchSongsClear: PropTypes.func.isRequired,
     searchSongsRequest: PropTypes.func.isRequired
   };
@@ -51,6 +53,7 @@ class CreatePlaylist extends React.PureComponent {
       createPlaylistRequest,
       createPlaylistRequestState,
       addSong,
+      removeSong,
       playlists
     } = this.props;
 
@@ -60,6 +63,7 @@ class CreatePlaylist extends React.PureComponent {
       onClearSearchSongs: searchSongsClear,
       onSearchSong: searchSongsRequest,
       onAddSong: addSong,
+      onRemoveSong: removeSong,
       playlists,
       searchSongsTracks
     }
@@ -70,6 +74,7 @@ class CreatePlaylist extends React.PureComponent {
 const mapStateToProps = state => {
   return {
     createPlaylistRequestState: state.createPlaylist,
+    playlists: state.playlist,
     searchSongsTracks: state.searchSongs.getIn(['data', 'tracks', 'items'], new List()).toJS()
   }
 };
@@ -78,6 +83,9 @@ const mapDispatchToProps = dispatch => {
   return {
     addSong: payload => {
       dispatch(playlistAddSong(payload));
+    },
+    removeSong: payload => {
+      dispatch(playlistRemoveSong(payload));
     },
     createPlaylistClear: () => {
       dispatch(createPlaylistClear());

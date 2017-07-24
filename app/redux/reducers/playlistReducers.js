@@ -1,5 +1,10 @@
 import { fromJS, Map } from 'immutable';
-import { PLAYLIST_CLEAR, PLAYLIST_ADD_SONG, PLAYLIST_LOAD_STATE_FROM_LOCAL_STORAGE } from '../actions/playlistActions';
+import {
+  PLAYLIST_CLEAR,
+  PLAYLIST_ADD_SONG,
+  PLAYLIST_LOAD_STATE_FROM_LOCAL_STORAGE,
+  PLAYLIST_REMOVE_SONG
+} from '../actions/playlistActions';
 import { CREATE_PLAYLIST_SUCCESS } from '../actions/createPlaylistActions';
 import { REMOVE_PLAYLIST_SUCCESS } from '../actions/removePlaylistActions';
 
@@ -7,6 +12,7 @@ const initialState = Map({});
 
 export const playlist = (state = initialState, action = {}) => {
   const reducerState = fromJS(state);
+  const { playlistId } = action;
 
   switch (action.type) {
     case PLAYLIST_CLEAR:
@@ -22,12 +28,17 @@ export const playlist = (state = initialState, action = {}) => {
       return reducerState.merge(fromJS(action.storedState));
 
     case PLAYLIST_ADD_SONG:
-      const { playlistId, song } = action;
+      const { song } = action;
       const songs = reducerState.getIn([playlistId, 'songs'], new Map());
 
       return reducerState.setIn([playlistId, 'songs'], songs.merge(fromJS({
         [song.id]: song
       })));
+
+    case PLAYLIST_REMOVE_SONG:
+      const { songId } = action;
+
+      return reducerState.deleteIn([playlistId, 'songs', songId]);
 
     case REMOVE_PLAYLIST_SUCCESS:
       return reducerState.withMutations(mutableMap => {

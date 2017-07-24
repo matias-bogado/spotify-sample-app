@@ -4,18 +4,22 @@ import MobileStepper from 'material-ui/MobileStepper';
 import Input from 'material-ui/Input';
 import InputLabel from 'material-ui/Input/InputLabel';
 import FormControl from 'material-ui/Form/FormControl';
-import FormHelperText from 'material-ui/Form/FormHelperText';
+import { Redirect } from 'react-router-dom';
 
+import urls from '../../routes/urls'
 import SearchBox from '../SearchBox/SearchBox';
+import SongTable from "../SongTable/SongTable";
 
 class CreatePlaylistForm extends Component {
   static propTypes = {
     createPlaylistRequestState: PropTypes.object.isRequired, // Immutable
     searchSongsTracks: PropTypes.arrayOf(PropTypes.object).isRequired,
+    playlists: PropTypes.object.isRequired, // Immutable
     onAddSong: PropTypes.func.isRequired,
-    onSearchSong: PropTypes.func.isRequired,
     onClearSearchSongs: PropTypes.func.isRequired,
-    onCreatePlaylist: PropTypes.func.isRequired
+    onCreatePlaylist: PropTypes.func.isRequired,
+    onSearchSong: PropTypes.func.isRequired,
+    onRemoveSong: PropTypes.func.isRequired
   };
   maxSteps = 2;
 
@@ -24,7 +28,8 @@ class CreatePlaylistForm extends Component {
 
     this.state = {
       activeStep: 0,
-      playlistName: ''
+      playlistName: '',
+      redirectToManage: false
     };
   }
 
@@ -34,6 +39,7 @@ class CreatePlaylistForm extends Component {
         {this.renderStepperHeading()}
         {this.renderStep()}
         <MobileStepper {...this.getStepperProps()} />
+        {this.renderRedirectToManage()}
       </div>
     )
   }
@@ -48,7 +54,7 @@ class CreatePlaylistForm extends Component {
     const { activeStep } = this.state;
     const steps = {
       0: () => this.renderNameInput(),
-      1: () => this.renderSearchBox()
+      1: () => this.renderSecondStep()
     };
 
     return typeof steps[activeStep] === 'function' ? steps[activeStep]() : null;
@@ -63,8 +69,20 @@ class CreatePlaylistForm extends Component {
     );
   }
 
-  renderSearchBox() {
-    return <SearchBox {...this.getSearchBoxProps()} />;
+  renderSecondStep() {
+    const playlistId = this.props.createPlaylistRequestState.getIn(['data', 'id']);
+    const songs = this.props.playlists.getIn([playlistId, 'songs'], new Map());
+
+    return (
+      <div>
+        <SearchBox {...this.getSearchBoxProps()} />
+        <SongTable onRemoveSong={this.handleRemoveSong} playlistId={playlistId} songs={songs}/>
+      </div>
+    );
+  }
+
+  renderRedirectToManage() {
+    return this.state.redirectToManage ? <Redirect to={urls.home} /> : null;
   }
 
   getStepperProps() {
@@ -126,6 +144,10 @@ class CreatePlaylistForm extends Component {
   handleNameInputChange = event => {
     this.setState({ playlistName: event.target.value });
   };
+
+  handleRemoveSong = payload => {
+    this.props.onRemoveSong(payload)
+  }
 }
 
 export default CreatePlaylistForm;
