@@ -1,49 +1,64 @@
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Map } from 'immutable';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Typography from 'material-ui/Typography';
 
 import Layout from '../../components-core/Layout';
-
-// import { authenticationLogoutRequest } from '../../redux/actions/authenticationActions';
+import { removePlaylistRequest } from '../../redux/actions/removePlaylistActions';
 
 import './Home.scss';
+import PlaylistTable from "../PlaylistTable/PlaylistTable";
 
 class Home extends React.PureComponent {
   static propTypes = {
-    authenticationLogout: PropTypes.object.isRequired,
-    logout: PropTypes.func.isRequired,
-    userPlacesData: PropTypes.object.isRequired // Immutable
+    playlistRemoveRequest: PropTypes.func.isRequired,
+    playlists: PropTypes.object.isRequired // Immutable
   };
 
   render() {
     return (
       <div className="page-home">
         <Layout>
-          <Typography type="body1" component="p">
-            You don't have any playlist yet
-          </Typography>
+          {this.renderNoPlaylistsMessage()}
+          {this.renderPlaylistTable()}
         </Layout>
       </div>
     );
   }
 
-}
-//
-// function mapStateToProps(storeState) {
-//   return {
-//     userPlacesData: storeState.userPlacesData,
-//     authenticationLogout: storeState.authenticationLogout
-//   };
-// }
-// function mapDispatchToProps(dispatch) {
-//   return {
-//     logout: () => dispatch(authenticationLogoutRequest())
-//   };
-// }
-//
-// export default connect(mapStateToProps, mapDispatchToProps)(Home);
+  renderNoPlaylistsMessage() {
+    return !this.props.playlists.size ? (
+      <Typography type="body1" component="p">
+        You don't have any playlist yet
+      </Typography>
+    ) : null;
+  }
 
-export default Home;
+  renderPlaylistTable() {
+    return this.props.playlists.size ? <PlaylistTable {...this.getPlaylistTableProps()}/> : null;
+  }
+
+  getPlaylistTableProps() {
+    const { playlists, playlistRemoveRequest } = this.props;
+    return {
+      playlists,
+      onRemovePlaylistRequest: playlistRemoveRequest
+    };
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+    playlists: state.playlist
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    playlistRemoveRequest: payload => {
+      dispatch(removePlaylistRequest(payload));
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -1,4 +1,4 @@
-import { uniqueId as _uniqueId } from 'lodash'
+import { playlistSaveIntoLocalStorage } from './playlistActions';
 
 // Action types
 export const CREATE_PLAYLIST_CLEAR = 'CREATE_PLAYLIST_CLEAR';
@@ -10,7 +10,8 @@ export const CREATE_PLAYLIST_SUCCESS = 'CREATE_PLAYLIST_SUCCESS';
 export const createPlaylistRequest = payload => {
   // TODO: Call server
   return dispatch => {
-    dispatch(createPlaylistSuccess({ name: payload.playlistName, id: _uniqueId() }))
+    dispatch(createPlaylistSuccess({ name: payload.playlistName, id: Date.now().toString() }));
+    dispatch(playlistSaveIntoLocalStorage());
   }
 };
 
