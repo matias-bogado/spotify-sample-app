@@ -18,7 +18,7 @@ export const playlistClear = ({ playlistId }) => {
 
 export const playlistAddSong = ({ playlistId, song }) => {
   return {
-    type: PLAYLIST_CLEAR,
+    type: PLAYLIST_ADD_SONG,
     playlistId,
     song
   };

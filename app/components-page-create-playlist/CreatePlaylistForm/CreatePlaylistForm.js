@@ -10,9 +10,12 @@ import SearchBox from '../SearchBox/SearchBox';
 
 class CreatePlaylistForm extends Component {
   static propTypes = {
+    createPlaylistRequestState: PropTypes.object.isRequired, // Immutable
+    searchSongsTracks: PropTypes.arrayOf(PropTypes.object).isRequired,
     onAddSong: PropTypes.func.isRequired,
-    onCreatePlaylist: PropTypes.func.isRequired,
-    createPlaylistRequestState: PropTypes.object.isRequired // Immutable
+    onSearchSong: PropTypes.func.isRequired,
+    onClearSearchSongs: PropTypes.func.isRequired,
+    onCreatePlaylist: PropTypes.func.isRequired
   };
   maxSteps = 2;
 
@@ -88,7 +91,11 @@ class CreatePlaylistForm extends Component {
 
   getSearchBoxProps() {
     return {
-      onSongSelected: this.props.onAddSong
+      createPlaylistRequestState: this.props.createPlaylistRequestState,
+      onClearRequest: this.props.onClearSearchSongs,
+      onFetchRequest: this.props.onSearchSong,
+      onSongSelected: this.props.onAddSong,
+      searchSongsTracks: this.props.searchSongsTracks
     };
   }
 
@@ -98,9 +105,15 @@ class CreatePlaylistForm extends Component {
     if (activeStep < (this.maxSteps - 1)) {
       this.setState({
         activeStep: activeStep + 1,
+      }, () => {
+        if (this.state.activeStep === 1) {
+          this.props.onCreatePlaylist({ playlistName }); // TODO: once wired with spotify server, refactor to wait for response
+        }
       });
-    } else {
-      this.props.onCreatePlaylist({ playlistName });
+    } else if (activeStep === (this.maxSteps - 1)) {
+      this.setState({
+        redirectToManage: true
+      });
     }
   };
 

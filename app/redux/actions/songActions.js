@@ -1,41 +1,60 @@
-import { playlistSaveIntoLocalStorage } from './playlistActions';
+import Spotify from 'spotify-web-api-js';
+
+import store from '../store/clientStore';
+
+const spotify = new Spotify();
 
 // Action types
-export const CREATE_PLAYLIST_CLEAR = 'CREATE_PLAYLIST_CLEAR';
-export const CREATE_PLAYLIST_FAILURE = 'CREATE_PLAYLIST_FAILURE';
-export const CREATE_PLAYLIST_LOADING = 'CREATE_PLAYLIST_LOADING';
-export const CREATE_PLAYLIST_SUCCESS = 'CREATE_PLAYLIST_SUCCESS';
+export const SEARCH_SONGS_CLEAR = 'SEARCH_SONGS_CLEAR';
+export const SEARCH_SONGS_FAILURE = 'SEARCH_SONGS_FAILURE';
+export const SEARCH_SONGS_LOADING = 'SEARCH_SONGS_LOADING';
+export const SEARCH_SONGS_SUCCESS = 'SEARCH_SONGS_SUCCESS';
 
 // Async action creators
-export const createPlaylistRequest = payload => {
-  // TODO: Save into spotify account
+export const searchSongsRequest = payload => {
   return dispatch => {
-    dispatch(createPlaylistSuccess({ name: payload.playlistName, id: Date.now().toString() }));
-    dispatch(playlistSaveIntoLocalStorage());
+    dispatch(searchSongsLoading(payload));
+
+    // TODO: move this to a redux middleware
+    const storeState = store.getState();
+    const accessToken = storeState.login.getIn(['data', 'access_token']);
+
+
+    if (accessToken) {
+      spotify.setAccessToken(accessToken);
+      spotify.searchTracks(payload.query)
+        .then(data => {
+          dispatch(searchSongsSuccess(data));
+        }, error => {
+          dispatch(searchSongsFailure({ error: 'request_failure', error_description: error.message }));
+        });
+    } else {
+      dispatch(searchSongsFailure({ error: 'invalid_token', error_description: 'Missing API Token' }));
+    }
   }
 };
 
 // Sync action creators
-export const createPlaylistClear = () => {
+export const searchSongsClear = () => {
   return {
-    type: CREATE_PLAYLIST_CLEAR
+    type: SEARCH_SONGS_CLEAR
   };
 };
-export const createPlaylistFailure = error => {
+export const searchSongsFailure = error => {
   return {
-    type: CREATE_PLAYLIST_FAILURE,
+    type: SEARCH_SONGS_FAILURE,
     error
   };
 };
-export const createPlaylistLoading = payload => {
+export const searchSongsLoading = payload => {
   return {
-    type: CREATE_PLAYLIST_LOADING,
+    type: SEARCH_SONGS_LOADING,
     payload
   };
 };
-export const createPlaylistSuccess = data => {
+export const searchSongsSuccess = data => {
   return {
-    type: CREATE_PLAYLIST_SUCCESS,
+    type: SEARCH_SONGS_SUCCESS,
     data
   };
 };

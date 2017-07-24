@@ -1,11 +1,10 @@
 import { fromJS, Map } from 'immutable';
 import {
-  LOGIN_CLEAR,
-  LOGIN_FAILURE,
-  LOGIN_LOADING,
-  LOGIN_SUCCESS,
-  LOGIN_LOAD_STATE_FROM_LOCAL_STORAGE
-} from '../actions/loginActions';
+  SEARCH_SONGS_CLEAR,
+  SEARCH_SONGS_FAILURE,
+  SEARCH_SONGS_LOADING,
+  SEARCH_SONGS_SUCCESS
+} from '../actions/songActions';
 
 const initialState = Map({
   isLoading: false,
@@ -14,14 +13,14 @@ const initialState = Map({
   data: null
 });
 
-export const login = (state = initialState, action = {}) => {
+export const searchSongs = (state = initialState, action = {}) => {
   const reducerState = fromJS(state);
 
   switch (action.type) {
-    case LOGIN_CLEAR:
+    case SEARCH_SONGS_CLEAR:
       return initialState;
 
-    case LOGIN_FAILURE:
+    case SEARCH_SONGS_FAILURE:
       return reducerState.merge(fromJS({
         isLoading: false,
         payload: null, // we remove the payload information for security purposes
@@ -29,7 +28,7 @@ export const login = (state = initialState, action = {}) => {
         data: null
       }));
 
-    case LOGIN_LOADING:
+    case SEARCH_SONGS_LOADING:
       return reducerState.merge(fromJS({
         isLoading: true,
         payload: action.payload,
@@ -37,7 +36,7 @@ export const login = (state = initialState, action = {}) => {
         data: null
       }));
 
-    case LOGIN_SUCCESS:
+    case SEARCH_SONGS_SUCCESS:
       return reducerState.merge(fromJS({
         isLoading: false,
         payload: null, // we remove the payload information for security purposes
@@ -45,14 +44,11 @@ export const login = (state = initialState, action = {}) => {
         data: action.data
       }));
 
-    case LOGIN_LOAD_STATE_FROM_LOCAL_STORAGE:
-      return reducerState.merge(fromJS(action.storedState));
-
     default:
       return reducerState
   }
 };
 
 export default {
-  login
+  searchSongs
 };
